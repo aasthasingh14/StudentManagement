@@ -1,0 +1,6 @@
+com\example\StudentManagementHonors\repository\StudentRepository.class
+com\example\StudentManagementHonors\model\Student.class
+com\example\StudentManagementHonors\controller\StudentController.class
+com\example\StudentManagementHonors\service\StudentService.class
+com\example\StudentManagementHonors\StudentManagementHonorsApplication.class
+com\example\StudentManagementHonors\config\WebSecurityConfig.class
