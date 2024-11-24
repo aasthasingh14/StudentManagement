@@ -1,4 +1,6 @@
-﻿# StudentManagement
+<p align="center">
+  <strong>STUDENT MANAGEMENT</strong>
+</p>
 
 ## Creating a Spring Boot Application and Testing the CRUD Operations in Postman
 
@@ -17,8 +19,8 @@
 #### Fetching students details
 ![FETCH STUDENT - GET](ImagesQuePart1/FetchStudent.png )
 
-#### Updating info Aastha -> Aastha Singh
-![UPDATE - PUT](ImagesQuePart1/Register.png )
+#### Updating information sets address and phoneNumber black ana also other entities can be updated
+![UPDATE - PUT](ImagesQuePart1/Update.png )
 
 #### Deleting the entry
 ![REMOVE - DELETE](ImagesQuePart1/Delete.png )
