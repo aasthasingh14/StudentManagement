@@ -1,9 +1,8 @@
-<p align="center" style="font-weight: 900; font-size: 100px;">
-  <strong>STUDENT MANAGEMENT</strong>
-</p>
+# STUDENT MANAGEMENT
 
 
-## PART 1 Creating a Spring Boot Application and Testing the CRUD Operations in Postman
+
+### PART 1 Creating a Spring Boot Application and Testing the CRUD Operations in Postman
 
 #### CRUD OPERATIONS
 ![Opeartions](ImagesQuePart1/CRUDOP.png  "CRUD OPERATIONS" )
@@ -25,3 +24,13 @@
 
 #### Deleting the entry
 ![REMOVE - DELETE](ImagesQuePart1/Delete.png )
+
+
+
+### PART 2 
+
+![AWSInst](ImagesQuePart2/AWSInst.jpg)
+
+![AWSClone repo](ImagesQuePart2/AWSClone.jpg)
+
+![AWS Final repo](ImagesQuePart2/AWSFinal.jpg)
