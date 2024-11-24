@@ -1,4 +1,4 @@
-<p align="center" style="font-weight: 900; font-size: 1.5em;">
+<p align="center" style="font-weight: 900; font-size: 100px;">
   <strong>STUDENT MANAGEMENT</strong>
 </p>
 
