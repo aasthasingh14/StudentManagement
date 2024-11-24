@@ -1,0 +1,58 @@
+pipeline {
+    agent any
+
+    environment {
+        GIT_REPO = 'https://github.com/aasthasingh14/StudentManagement.git'
+        BRANCH = 'main'
+        AWS_INSTANCE_IP = 'ec2-3-88-232-250.compute-1.amazonaws.com'
+        APP_JAR_NAME = 'StudentManagementHonors-0.0.1-SNAPSHOT.jar'
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                echo 'Cloning repository...'
+                git branch: "${BRANCH}", url: "${GIT_REPO}"
+            }
+        }
+
+        stage('Build Application') {
+            steps {
+                echo 'Building the application...'
+                sh './mvnw clean package -DskipTests'
+            }
+        }
+
+        stage('Upload to AWS EC2') {
+            steps {
+                echo 'Uploading JAR file to AWS EC2...'
+                sshagent(['aws-ssh-key-id']) {
+                    sh """
+                    scp ${APP_JAR_NAME} ec2-user@${AWS_INSTANCE_IP}:/home/ec2-user/
+                    """
+                }
+            }
+        }
+
+        stage('Start Application on EC2') {
+            steps {
+                echo 'Starting application on AWS EC2...'
+                sshagent(['aws-ssh-key-id']) {
+                    sh """
+                    ssh ec2-user@${AWS_INSTANCE_IP} "pkill -f 'java -jar' || true"  // Kill any running Java app
+                    ssh ec2-user@${AWS_INSTANCE_IP} "nohup java -jar /home/ec2-user/${APP_JAR_NAME} > app.log 2>&1 &"  // Start the new app
+                    """
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Deployment successful!'
+        }
+        failure {
+            echo 'Deployment failed. Check logs for errors.'
+        }
+    }
+}
