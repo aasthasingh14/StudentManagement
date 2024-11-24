@@ -1,8 +1,9 @@
-<p align="center">
-  <strong><h1>STUDENT MANAGEMENT</h1></strong>
+<p align="center" style="font-weight: 1000; font-size: 2.5em;">
+  <strong>STUDENT MANAGEMENT</strong>
 </p>
 
-## Creating a Spring Boot Application and Testing the CRUD Operations in Postman
+
+## PART 1 Creating a Spring Boot Application and Testing the CRUD Operations in Postman
 
 #### CRUD OPERATIONS
 ![Opeartions](ImagesQuePart1/CRUDOP.png  "CRUD OPERATIONS" )
