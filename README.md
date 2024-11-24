@@ -29,8 +29,20 @@
 
 ### PART 2 
 
+#### Creating Instance
 ![AWSInst](ImagesQuePart2/AWSInst.jpg)
 
+#### Cloning github repository
 ![AWSClone repo](ImagesQuePart2/AWSClone.jpg)
 
+#### Starting the jar file here
 ![AWS Final repo](ImagesQuePart2/AWSFinal.jpg)
+
+#### Creating a jenkins job
+![Jenkins](ImagesQuePart2/CreatingJenkinsJob.jpg)
+
+#### Build in Jenkins
+![Jenkins](ImagesQuePart2/JenkinBuildSuccessful.jpg)
+
+#### Final result
+![Jenkins](ImagesQuePart2/jenkinFinal.jpg)
