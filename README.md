@@ -1,5 +1,5 @@
 <p align="center">
-  <strong><h1>STUDENT MANAGEMENT,/h1></strong>
+  <strong><h1>STUDENT MANAGEMENT</h1></strong>
 </p>
 
 ## Creating a Spring Boot Application and Testing the CRUD Operations in Postman
