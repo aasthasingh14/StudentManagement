@@ -1,48 +1,47 @@
 pipeline {
     agent any
 
+    tools {
+        maven "Maven"  // Ensure Maven is configured in Jenkins
+    }
+
     environment {
-        GIT_REPO = 'https://github.com/aasthasingh14/StudentManagement.git'
-        BRANCH = 'main'
-        AWS_INSTANCE_IP = 'ec2-3-88-232-250.compute-1.amazonaws.com'
-        APP_JAR_NAME = 'StudentManagementHonors-0.0.1-SNAPSHOT.jar'
+        EC2_USER = 'ec2-user'
+        EC2_HOST = 'ec2-18-234-99-67.compute-1.amazonaws.com'
+        JAR_NAME = 'StudentManagementHonors-0.0.1-SNAPSHOT.jar'
+        PRIVATE_KEY_PATH = 'C:/Program Files/Jenkins/kerpairdeploy.pem'
     }
 
     stages {
-        stage('Checkout Code') {
+        stage('Checkout') {
             steps {
-                echo 'Cloning repository...'
-                git branch: "${BRANCH}", url: "${GIT_REPO}"
+                // Clone GitHub Repository
+                git branch: 'main', url: 'https://github.com/aasthasingh14/StudentManagement.git'
             }
         }
-
-        stage('Build Application') {
+        
+        stage('Build') {
             steps {
-                echo 'Building the application...'
-                sh './mvnw clean package -DskipTests'
+                // Build the project using Maven
+                bat 'mvn clean install'
             }
-        }
-
-        stage('Upload to AWS EC2') {
-            steps {
-                echo 'Uploading JAR file to AWS EC2...'
-                sshagent(['aws-ssh-key-id']) {
-                    sh """
-                    scp ${APP_JAR_NAME} ec2-user@${AWS_INSTANCE_IP}:/home/ec2-user/
-                    """
+            post {
+                success {
+                    // Archive the built JAR file
+                    archiveArtifacts artifacts: 'target/*.jar'
                 }
             }
         }
-
-        stage('Start Application on EC2') {
+        
+        stage('Deploy') {
             steps {
-                echo 'Starting application on AWS EC2...'
-                sshagent(['aws-ssh-key-id']) {
-                    sh """
-                    ssh ec2-user@${AWS_INSTANCE_IP} "pkill -f 'java -jar' || true"  // Kill any running Java app
-                    ssh ec2-user@${AWS_INSTANCE_IP} "nohup java -jar /home/ec2-user/${APP_JAR_NAME} > app.log 2>&1 &"  // Start the new app
-                    """
+                script {
+                    // Copy JAR file to the EC2 instance
+                    bat "scp -i \"${PRIVATE_KEY_PATH}\" target/${JAR_NAME} ${EC2_USER}@${EC2_HOST}:/home/ec2-user/"
+                    // Start the application on the EC2 server
+                    bat "ssh -i \"${PRIVATE_KEY_PATH}\" ${EC2_USER}@${EC2_HOST} java -jar /home/ec2-user/${JAR_NAME}"
                 }
+            
             }
         }
     }
@@ -52,7 +51,7 @@ pipeline {
             echo 'Deployment successful!'
         }
         failure {
-            echo 'Deployment failed. Check logs for errors.'
+            echo 'Build or deployment failed!'
         }
     }
 }
