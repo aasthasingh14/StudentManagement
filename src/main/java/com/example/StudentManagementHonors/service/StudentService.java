@@ -1,47 +1,86 @@
 package com.example.StudentManagementHonors.service;
 
-import com.example.StudentManagementHonors.model.Student;
-import com.example.StudentManagementHonors.repository.StudentRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.StudentManagementHonors.Student;
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class StudentService {
-    @Autowired
-    private StudentRepository repository;
+    private HashMap<String, Student> students;
 
-    public Student registerStudent(Student student) {
-        if (repository.findByEmail(student.getEmail()).isPresent()) {
-            throw new IllegalArgumentException("Email already in use!");
+    @PostConstruct
+    public void setup() {
+        students = new HashMap<>();
+    }
+
+    // Create a new student
+    public String createStudent(Student student) {
+        student.setStudentId(UUID.randomUUID().toString());
+        students.put(student.getStudentId(), student);
+        return student.getStudentId();
+    }
+
+    // Retrieve all students
+    public List<Student> getAllStudents() {
+        return students.values().stream().collect(Collectors.toList());
+    }
+
+    // Retrieve a student by ID
+    public Student getStudent(String id) {
+        return students.getOrDefault(id, null);
+    }
+
+    // Update an existing student
+    public Student updateStudent(String id, Student updatedStudent) {
+        // Assume `students` is a Map<String, Student> or a database retrieval method
+        Student existingStudent = students.get(id); // Retrieve the student by ID
+
+        if (existingStudent == null) {
+            return null; // Return null if the student does not exist
         }
-        return repository.save(student);
-    }
 
-    public Optional<Student> loginStudent(String email, String password) {
-        return repository.findByEmail(email)
-                .filter(student -> student.getPassword().equals(password));
-    }
-
-    public Student updateStudent(Long id, Student studentDetails) {
-        Student student = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Student not found"));
-        student.setName(studentDetails.getName());
-        student.setEmail(studentDetails.getEmail());
-        student.setAddress(studentDetails.getAddress());
-        student.setPhoneNumber(studentDetails.getPhoneNumber());
-        return repository.save(student);
-    }
-
-    public Optional<Student> getStudent(Long id) {
-        return repository.findById(id);
-    }
-
-    public void deleteStudent(Long id) {
-        if (!repository.existsById(id)) {
-            throw new IllegalArgumentException("Student with ID " + id + " does not exist.");
+        // Update only the fields provided in `updatedStudent`
+        if (updatedStudent.getName() != null) {
+            existingStudent.setName(updatedStudent.getName());
         }
-        repository.deleteById(id);
+        if (updatedStudent.getEmail() != null) {
+            existingStudent.setEmail(updatedStudent.getEmail());
+        }
+        if (updatedStudent.getPhone() != null) {
+            existingStudent.setPhone(updatedStudent.getPhone());
+        }
+        if (updatedStudent.getPassword() != null) {
+            existingStudent.setPassword(updatedStudent.getPassword());
+        }
+        if (updatedStudent.getAddress() != null) {
+            existingStudent.setAddress(updatedStudent.getAddress());
+        }
+
+        // Save the updated student back to the repository
+        students.put(id, existingStudent); // Replace with appropriate database save logic if needed
+
+        return existingStudent; // Return the updated student
     }
+
+
+    // Delete a student
+    public boolean deleteStudent(String id) {
+        if (!students.containsKey(id)) {
+            return false; // Student not found
+        }
+        students.remove(id);
+        return true;
+    }
+
+    // Check if a student exists by name and email
+    public boolean existsByEmail(String email) {
+        return students.values().stream()
+                .anyMatch(student -> student.getEmail().equalsIgnoreCase(email));
+    }
+
+
 }
